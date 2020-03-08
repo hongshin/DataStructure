@@ -24,7 +24,7 @@ main ()
 	while (arraylist_length(l) > 0) {
 		int e ;
 
-		if (arraylist_remove_first(l, &e)) 
+		if (arraylist_pop(l, &e)) 
 			return 1 ;
 		printf("%d ", e) ;
 	}
