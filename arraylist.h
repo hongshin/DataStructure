@@ -19,4 +19,4 @@ int
 arraylist_length (arraylist_t * l) ;
 
 int 
-arraylist_remove_first (arraylist_t * l, int * e) ;
+arraylist_pop (arraylist_t * l, int * e) ;
