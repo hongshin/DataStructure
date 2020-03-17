@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "sortedlist.h"
 
 sortedlist_t * 
@@ -15,28 +16,31 @@ sortedlist_alloc ()
 	return l ;
 }
 
+int
+search (sortedlist_t * l, int e, int begin, int end)
+{
+	int mid ;
+
+	if (begin == end)
+		return begin ;
+
+	mid = (begin + end) / 2 ;
+
+	if (l->elements[mid] < e)
+		return search(l, e, mid + 1 , end) ;
+
+	return search(l, e, begin, mid) ;
+}
+
 int 
 sortedlist_lookup (sortedlist_t * l, int e)
 {
-	int begin, end, mid ; 
+	int pos ;
 
-	begin = 0 ; 
-	end = l->length - 1 ;
-	while (begin < end) {
-		mid = (begin + end) / 2 ;
+	pos = search(l, e, 0, l->length) ;
+	if ((pos < l->length) && (e == l->elements[pos]))
+		return pos ;
 
-		if (l->elements[mid] == e) {
-			return mid ;
-		}
-		else if (l->elements[mid] < e) {//  elem[mid+1] <= e <= elem[end] 
-			begin = mid + 1 ;
-		}
-		else /* e < l->elements[mid] */ {
-			end = mid - 1 ;
-		}
-	}
-	if (l->elements[begin /*end*/] == e)
-		return begin ;
 	return -1 ; 
 }
 
@@ -117,3 +121,36 @@ sortedlist_remove (sortedlist_t * l, int e)
 	return 0 ;
 }
 
+sortedlist_t * 
+sortedlist_merge (sortedlist_t * l1, sortedlist_t * l2)
+{
+	sortedlist_t * lm ;
+	lm = (sortedlist_t *) malloc(sizeof(sortedlist_t)) ;
+	lm->length = 0 ;
+	lm->capacity = l1->length + l2->length ;
+	lm->elements = (int *) calloc(sizeof(int), lm->capacity) ;
+
+	int i ;
+	int from, to ;
+
+	from = 0 ;
+	for (i = 0 ; i < l2->length ; i++) {
+		to = search(l1, l2->elements[i], 0, l1->length) ;
+
+		memcpy(	(void *)(lm->elements + lm->length), 
+				(void *)(l1->elements + from), 
+				sizeof(int) * (to - from)) ;
+		lm->length += to - from ;
+		from = to ;
+
+		lm->elements[lm->length] = l2->elements[i] ;
+		lm->length += 1 ;
+	}
+	memcpy(	(void *)(lm->elements + lm->length), 
+			(void *)(l1->elements + from), 
+			sizeof(int) * (l1->length - from)) ;
+
+	lm->length += l1->length - from ;
+
+	return lm ;
+}
