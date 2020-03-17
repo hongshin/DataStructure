@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "sortedlist.h"
+
 
 sortedlist_t * 
 sortedlist_alloc () 
@@ -109,3 +111,31 @@ sortedlist_remove (sortedlist_t * l, int e)
 	return 0 ;
 }
 
+sortedlist_t *
+sortedlist_merge (sortedlist_t * l1, sortedlist_t * l2)
+{
+	sortedlist_t * lm = 0x0 ;
+
+	lm = (sortedlist_t *) malloc(sizeof(sortedlist_t)) ;
+	lm->capacity = l1->length + l2->length ;
+	lm->length = l1->length + l2->length ;
+	lm->elements = (int *) calloc(lm->capacity, sizeof(int)) ;
+
+	memcpy((void *)lm->elements, (void *)l1->elements, sizeof(int) * l1->length) ;
+	memcpy((void *)(lm->elements + l1->length), (void *)(l2->elements), sizeof(int) * l2->length) ;
+
+	int i ;
+	for (i = l1->length ; i < l1->length + l2->length ; i++) {
+		int p ;
+		p = i ; 
+		while ((0 < p) && (!(lm->elements[p - 1] < lm->elements[p]))) {
+			int t ;
+			t = lm->elements[p-1] ;
+			lm->elements[p-1] = lm->elements[p] ;
+			lm->elements[p] = t ;
+			p-- ;
+		}
+	}
+
+	return lm ;
+}
