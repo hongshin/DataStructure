@@ -24,6 +24,7 @@ void
 print_map ()
 {
 	int i, j ;
+
 	for (i = 0 ; i < X + 2 ; i++)
 		printf("XX") ;
 	printf("\n") ;
@@ -59,27 +60,29 @@ main ()
 	}
 	fclose(fp) ;
 
-	stack * path = create_stack(400, sizeof(decision)) ;
 
+	stack * path = create_stack(400, sizeof(decision)) ;
+	
 	decision curr, next ;
+
 	curr.x = 0 ;
 	curr.y = 0 ;
-	curr.d = UP ;
+	curr.d = UP ; // UP=0
 
 	push(path, &curr) ;
-
 	while (!is_empty(path)) {
+		pop(path, &curr) ; 
+
 		if (curr.x == X-1 && curr.y == Y-1) {
 			int i ;
 			decision c ;
 			for (i = 0 ; i < get_size(path) ; i++) {
 				get_element(path, i, &c) ;
-				m[c.y][c.x] = 2 ;
+				m[c.y][c.x] = PATH ;
 			}
 			print_map() ;
 			return 0 ;
 		}
-		pop(path, &curr) ;
 		
 		if (curr.d == UP) {
 			next.x = curr.x ;
@@ -101,6 +104,8 @@ main ()
 			next.y = curr.y ;
 			next.d = UP ;
 		}
+		else { } // curr.d == DONE 
+
 		if (curr.d != DONE) {
 			curr.d += 1 ;
 			push(path, &curr) ;
@@ -108,9 +113,10 @@ main ()
 		else {
 			continue ;
 		}
+	
 		if (0 <= next.x && next.x < X) {
 			if (0 <= next.y && next.y < Y) {
-				if (m[next.y][next.x] == 0) {
+				if (m[next.y][next.x] == EMPTY) {
 					for (i = 0 ; i < get_size(path) ; i++) {
 						decision e ;
 						get_element(path, i, &e) ;
