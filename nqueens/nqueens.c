@@ -16,20 +16,21 @@ Y (int pos)
 }
 
 int
-conflict (stack * st, int p)
+conflict (stack * st, int next)
 {
 	int i ; 
+
 	for (i = 0 ; i < st->top ; i++) {
-		int q ;
-		get_element(st, i, &q) ;
+		int present ;
+		get_element(st, i, &present) ;
 		
-		if (X(q) == X(p)) 
+		if (X(present) == X(next)) 
 			return 1 ;
-		if (Y(q) == Y(p)) 
+		if (Y(present) == Y(next)) 
 			return 1 ;
-		if (X(p) + Y(p) == X(q) + Y(q)) 
+		if (X(present) + Y(present) == X(next) + Y(next)) 
 			return 1 ;
-		if (X(p) - Y(p) == X(q) - Y(q))
+		if (X(present) - Y(present) == X(next) - Y(next))
 			return 1 ;
 	}
 
@@ -53,14 +54,15 @@ main ()
 			curr += 1 ;
 		}
 		if (curr == 64) {
-			pop(sol, &curr) ;
+			pop(sol, &curr) ; 
 			curr += 1 ;
 		}
 	}
-	
+
 	while (!is_empty(sol)) {
 		int elem ;
 		pop(sol, &elem) ;
 		printf("(%d,%d)\n", X(elem), Y(elem)) ;
 	}
+	return 0 ;
 }
