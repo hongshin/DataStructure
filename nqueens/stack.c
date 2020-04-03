@@ -1,10 +1,11 @@
 #include <stdlib.h>
+#include <string.h>
 #include "stack.h"
 
-stack_t * 
+stack * 
 create_stack (int capacity, int unit) 
 {
-	stack_t * stack = (stack_t *) malloc(sizeof(stack_t)) ;
+	stack * stack = malloc(sizeof(stack)) ;
 	stack->capacity = capacity ;
 	stack->unit = unit ;
 	stack->top = 0 ;
@@ -13,7 +14,7 @@ create_stack (int capacity, int unit)
 }
 
 void
-delete_stack (stack_t * stack) 
+delete_stack (stack * stack) 
 {
 	if (stack->buffer != 0x0)
 		free(stack->buffer) ;
@@ -21,7 +22,7 @@ delete_stack (stack_t * stack)
 }
 
 int 
-push (stack_t * stack, void * elem)
+push (stack * stack, void * elem)
 {
 	if (is_full(stack))
 		return 1 ;
@@ -32,7 +33,7 @@ push (stack_t * stack, void * elem)
 }
 
 int
-pop (stack_t * stack, void * elem)
+pop (stack * stack, void * elem)
 {
 	if (is_empty(stack)) 
 		return 1 ;
@@ -43,25 +44,25 @@ pop (stack_t * stack, void * elem)
 }
 
 int 
-is_empty (stack_t * stack) 
+is_empty (stack * stack) 
 {
 	return (stack->top == 0) ;
 }
 
 int 
-is_full (stack_t * stack) 
+is_full (stack * stack) 
 {
 	return (stack->top == stack->capacity) ;
 }
 
 int
-get_size (stack_t * stack) 
+get_size (stack * stack) 
 {
 	return stack->top ;
 }
 
 int
-get_element (stack_t * stack, int index, void * elem)
+get_element (stack * stack, int index, void * elem)
 {
 	if (stack->top <= index)
 		return 1 ;

@@ -16,7 +16,7 @@ Y (int pos)
 }
 
 int
-conflict (stack_t * st, int p)
+conflict (stack * st, int p)
 {
 	int i ; 
 	for (i = 0 ; i < st->top ; i++) {
@@ -39,7 +39,7 @@ conflict (stack_t * st, int p)
 int
 main () 
 {
-	stack_t * sol ;
+	stack * sol ;
 	sol = create_stack(8, sizeof(int)) ;
 
 	int curr = 0 ;
