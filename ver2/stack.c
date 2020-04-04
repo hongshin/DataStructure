@@ -1,72 +1,73 @@
 #include <stdlib.h>
+#include <string.h>
 #include "stack.h"
 
-stack_t * 
+stack * 
 create_stack (int capacity, int unit) 
 {
-	stack_t * stack = (stack_t *) malloc(sizeof(stack_t)) ;
-	stack->capacity = capacity ;
-	stack->unit = unit ;
-	stack->top = 0 ;
-
-	stack->buffer = (char *) calloc(capacity, unit) ;
-	
-	return stack ;
+	stack * st = malloc(sizeof(stack)) ;
+	st->capacity = capacity ;
+	st->unit = unit ;
+	st->top = 0 ;
+	st->buffer = calloc(capacity, unit) ;
+	return st ;
 }
 
 void
-delete_stack (stack_t * stack) 
+delete_stack (stack * st) 
 {
-	free(stack->buffer) ;
-	free(stack) ;
+	if (st->buffer != 0x0)
+		free(st->buffer) ;
+	free(st) ;
 }
 
 int 
-push (stack_t * stack, void * elem)
+push (stack * st, void * elem)
 {
-	if (is_full(stack))
+	if (is_full(st))
 		return 1 ;
-	
-	memcpy((void *) stack->buffer + stack->top * stack->unit, elem, stack->unit) ;
-	stack->top += 1 ;
+
+	memcpy(st->buffer + ((st->top) * (st->unit)), elem, st->unit) ;
+	st->top += 1 ;
+
 	return 0 ;
 }
 
 int
-pop (stack_t * stack, void * elem)
+pop (stack * st, void * elem)
 {
-	if (is_empty(stack)) 
+	if (is_empty(st)) 
 		return 1 ;
 	
-	memcpy(elem, stack->buffer + (stack->top - 1) * stack->unit, stack->unit) ;
-	stack->top -= 1 ;
+	memcpy(elem, st->buffer + (st->top - 1) * st->unit, st->unit) ;
+	st->top -= 1 ;
 	return 0;
 }
 
 int 
-is_empty (stack_t * stack) 
+is_empty (stack * st) 
 {
-	return (stack->top == 0) ;
+	return (st->top == 0) ;
 }
 
 int 
-is_full (stack_t * stack) 
+is_full (stack * st) 
 {
-	return (stack->top == stack->capacity) ;
+	return (st->top == st->capacity) ;
 }
 
 int
-get_size (stack_t * stack) 
+get_size (stack * st) 
 {
-	return stack->top ;
+	return st->top ;
 }
 
 int
-get_element (stack_t * stack, int index, void * elem)
+get_element (stack * st, int index, void * elem)
 {
-	if (stack->top <= index)
+	if (st->top <= index)
 		return 1 ;
 
-	memcpy(elem, stack->buffer + index * stack->unit, stack->unit) ;
+	memcpy(elem, st->buffer + index * st->unit, st->unit) ;
 	return 0 ;
 }

@@ -1,32 +1,32 @@
 typedef 
 	struct {
-		char * buffer ; // capacity X unit
-		int unit ; // size of an element
+		void * buffer ;
+		int unit ;
 		int capacity ;
 		int top ;
 	} 
-	stack_t ;
+	stack ;
 
-stack_t * 
+stack * 
 create_stack (int capacity, int unit) ;
 
 void
-delete_stack (stack_t * stack) ;
+delete_stack (stack * stack) ;
 
 int 
-push (stack_t * stack, void * elem) ;
+push (stack * stack, void * elem) ;
 
 int
-pop (stack_t * stack, void * elem) ;
+pop (stack * stack, void * elem) ;
 
 int 
-is_empty (stack_t * stack) ;
+is_empty (stack * stack) ;
 
 int 
-is_full (stack_t * stack) ;
+is_full (stack * stack) ;
 
 int
-get_size (stack_t * stack) ;
+get_size (stack * stack) ;
 
 int
-get_element (stack_t * stack, int index, void * elem) ;
+get_element (stack * stack, int index, void * elem) ;

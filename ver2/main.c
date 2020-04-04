@@ -5,29 +5,29 @@
 int
 main () 
 {
-	stack_t * st ;
+	stack * st ;
 
-	double data ;
+	int data ;
 
-	st = create_stack(4, sizeof(double)) ;
+	st = create_stack(4, sizeof(int)) ;
 
-	data = 11.0 ;	
+	data = 11 ;	
 	push(st, &data) ;
 
-	data = 12.0 ; 
-	push(st, &data) ;
-	
-	data = 13.0 ; 
+	data = 12 ; 
 	push(st, &data) ;
 	
-	data = 14.0 ; 
+	data = 13 ; 
 	push(st, &data) ;
 	
-	data = 15.0 ; 
+	data = 14 ; 
+	push(st, &data) ;
+
+	data = 15 ; 
 	push(st, &data) ;
 
 	pop(st, &data) ;
-	printf("%f\n", data) ;
+	printf("%d\n", data) ;
 
 	delete_stack(st) ;
 }
