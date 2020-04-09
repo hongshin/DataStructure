@@ -1,61 +1,86 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "stack.h"
 
-int
-main () 
+void
+print_stack (stack * st)
 {
-	int n_tokens ;
-	int i ; 
-	stack * st ;
+	int i ;
+	for (i = 0 ; i < get_size(st) ; i++) {
+		int num ;
+		get_element(st, i, &num) ;
+		printf("[%d]", num) ;
+	}
+	printf(".\n") ;
+}
 
+
+int
+main ()
+{
+	stack * st ;
 	st = create_stack(100, sizeof(int)) ;
 
-	scanf("%d", &n_tokens) ;
+	char tok[8] ;
+	do {
+		print_stack(st) ;
 
-	char buf[64] ;
+		scanf("%s", tok) ;
 
-	for (i = 0 ; i < n_tokens ; i++) {
-		scanf("%s", buf) ;
-		if (isdigit(buf[0])) {
-			int val = atoi(buf) ;
-			push(st, &val) ;
+		if (tok[0] == ';') 
+			break ;
+
+		if (isdigit(tok[0])) {
+			int num = atoi(tok) ;
+			push(st, &num) ;
 		}
-		else {
-			int val1, val2, ret ;
-			switch (buf[0]) {
-				case '+': 
-					pop(st, &val2) ;
-					pop(st, &val1) ;
-					ret = val1 + val2 ;
-					push(st, &ret) ;
+		else /* operator */ {
+			switch (tok[0]) {
+				case '+' : {
+					int n1, n2, res ;
+					pop(st, &n2) ;
+					pop(st, &n1) ;
+					res = n1 + n2 ;
+					push(st, &res) ;
 					break ;
-				case '-': 
-					pop(st, &val2) ;
-					pop(st, &val1) ;
-					ret = val1 - val2 ;
-					push(st, &ret) ;
+				} 
+
+				case '-' : {
+					int n1, n2, res ;
+					pop(st, &n2) ;
+					pop(st, &n1) ;
+					res = n1 - n2 ;
+					push(st, &res) ;
 					break ;
-				case '*': 
-					pop(st, &val2) ;
-					pop(st, &val1) ;
-					ret = val1 * val2 ;
-					push(st, &ret) ;
+				}
+
+				case '*' : {
+					int n1, n2, res ;
+					pop(st, &n2) ;
+					pop(st, &n1) ;
+					res = n1 * n2 ;
+					push(st, &res) ;
 					break ;
-				case '/': 
-					pop(st, &val2) ;
-					pop(st, &val1) ;
-					ret = val1 / val2 ;
-					push(st, &ret) ;
+				}
+
+				case '/' : {
+					int n1, n2, res ;
+					pop(st, &n2) ;
+					pop(st, &n1) ;
+					res = n1 / n2 ;
+					push(st, &res) ;
 					break ;
+				}
 			}
 		}
-	}
+	} while (tok[0] != ';') ;
 
 	int result ;
 	pop(st, &result) ;
 	printf("%d\n", result) ;
-
+	
 	delete_stack(st) ;
+	return 0 ;
 }
