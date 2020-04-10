@@ -1,30 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "stack.h"
 
 typedef enum { Value, Operator } token_type ;
 
 typedef struct {
-	int value ;
-	char operator ;
+	int value ; 
+	char operator ; 
 	token_type type ;
 } token_t ;
-
-int n_tokens ;
-token_t tokens[100] ;
 
 void
 print_stack (stack * st)
 {
 	int i ;
 	token_t t ;
+	
+	printf("> " ) ;
 	for (i = 0 ; i < get_size(st); i++) {
 		get_element(st, i, &t) ;
-		printf("(%d,%c) ", t.value, t.operator) ;
+		if (t.type == Value)
+			printf("[%d] ", t.value) ;
+		else /* t.type == Operator */
+			printf("[%c] ", t.operator) ;
 	}
 	printf("\n") ;
 }
-
 
 int
 main () 
@@ -34,73 +36,64 @@ main ()
 
 	st = create_stack(100, sizeof(token_t)) ;
 	
-	char buf[64] ;
-	i = 0 ;
-	do {
-		scanf("%s", buf) ;
+	char buf[16] = { 0x0 } ;
 
-		switch (buf[0]) {
-			case ';':
-				break ;
+	while (!(buf[0] == ';' && get_size(st) == 1)) {
+		print_stack(st) ;
 
-			case '+':
-			case '-':
-			case '*':
-			case '/':
-				tokens[i].operator = buf[0] ;
-				tokens[i].type = Operator ;
-				i++ ;
-				break ;
+		if (get_size(st) >= 3) {
+			token_t oprt, val1, val2 ;
 
-			default:
-				tokens[i].value = atoi(buf) ;
-				tokens[i].type = Value ;
-				i++ ;
-				break ;
-		}
-	}
-	while (buf[0] != ';') ;
-	n_tokens = i ;
+			pop(st, &val2) ;
+			pop(st, &val1) ;
+			pop(st, &oprt) ;
 
-	i = 0 ; 
-	while (i < n_tokens || get_size(st) > 1) {
-		token_t tok1, tok2, tok_op ;
-		print_stack(st) ;	
-		if (pop(st, &tok1) == 0) {
-			if (pop(st, &tok2) == 0) {
-				if (tok1.type == Value && tok2.type == Value) {
-					pop(st, &tok_op) ;
-					token_t res ;
-					res.type = Value ;
-					switch (tok_op.operator) {
-						case '+':
-							res.value = tok2.value + tok1.value ;
-							break ;
-						case '-':
-							res.value = tok2.value - tok1.value ;
-							break ;
-						case '*':
-							res.value = tok2.value * tok1.value ;
-							break ;
-						case '/':
-							res.value = tok2.value / tok1.value ;
-							break ;
-					}
-					push(st, &res) ;
-					continue ;
+			if (val1.type == Value && val2.type == Value && oprt.type == Operator) {
+				token_t res ;
+
+				res.type = Value ;
+				switch (oprt.operator) {
+					case '+':
+						res.value = val1.value + val2.value ;
+						break ;
+					case '-':
+						res.value = val1.value - val2.value ;
+						break ;
+					case '*':
+						res.value = val1.value * val2.value ;
+						break ;
+					case '/':
+						res.value = val1.value / val2.value ;
+						break ;
 				}
-				else {
-					push(st, &tok2) ;
-					push(st, &tok1) ;
-				}
+				push(st, &res) ;
+				continue ;
 			}
 			else {
-				push(st, &tok1) ;
+				push(st, &oprt) ;
+				push(st, &val1) ;
+				push(st, &val2) ;
 			}
 		}
-		if (i < n_tokens) 
-			push(st, &(tokens[i])) ;
-		i++ ;
+		
+		scanf("%s", buf) ;
+		printf("> read %s\n", buf) ;
+
+		if (buf[0] == ';') {
+			continue ;
+		}
+		else if (isdigit(buf[0])) {
+			token_t tok ;
+			tok.type = Value ;
+			tok.value = atoi(buf) ;
+			push(st, &tok) ;
+		}
+		else /* operator */ {
+			token_t tok ;
+			tok.type = Operator ;
+			tok.operator = buf[0] ;
+			push(st, &tok) ;
+		}
 	}
 
 	token_t result ;
