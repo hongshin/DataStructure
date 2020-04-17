@@ -46,9 +46,8 @@ dequeue (queue * que, void * elem)
 		return 1 ;
 	
 	memcpy(elem, que->buffer + que->front * que->unit, que->unit) ;
-	que->front = (que->front + 1) % que->capacity ;
-	if (que->front == que->rear)
-		que->full = 0 ;
+	que->front = (que->front + 1) % que->capacity ;	
+	que->full = 0 ;
 
 	return 0;
 }
