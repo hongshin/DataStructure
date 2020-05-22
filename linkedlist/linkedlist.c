@@ -17,7 +17,7 @@ linkedlist_alloc (int unit)
 }
 
 void
-linkedlist_free (linkedlist_t * l)
+linkedlist_free (linkedlist_t * l, void (* free_element)(void * e))
 {
 	node_t * curr ;
 	node_t * next ;
@@ -25,6 +25,8 @@ linkedlist_free (linkedlist_t * l)
 	curr = l->right ;
 	while (curr != l) {
 		next = curr->right ;
+		if (free_element != 0x0)
+			free_element(curr->element) ;
 		free(curr->element) ;
 		free(curr) ;
 		curr = next ;
@@ -44,6 +46,19 @@ linkedlist_length (linkedlist_t * l)
 		curr = curr->right ; 
 	}
 	return len ; 
+}
+
+void
+linkedlist_print (linkedlist_t * l, void (* print_element)(void * e))
+{
+	node_t * curr ;
+	node_t * next ;
+
+	curr = l->right ;
+	while (curr != l) {
+		print_element(curr->element) ;
+		curr = curr->right ;
+	}
 }
 
 void 
@@ -128,4 +143,15 @@ linkedlist_get (linkedlist_t * l, int pos, void * e)
 
 	memcpy(e, curr->element, unit) ;
 	return 0 ;
+}
+
+void
+linkedlist_sort (linkedlist_t * l, int ( cmp_elements)(void * e1, void * e2)) 
+{
+	/* TODO */
+}
+
+void
+linkedlist_qsort (linkedlist_t * l, int ( cmp_elements)(void * e1, void * e2))
+{
 }
