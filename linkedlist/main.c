@@ -74,5 +74,5 @@ main ()
 	printf("%s\n", s) ;
 
 	//linkedlist_print(l, print_string) ;
-	linkedlist_free(l, 0x0 /*free_string*/) ;
+	linkedlist_free(l, free_string) ;
 }
