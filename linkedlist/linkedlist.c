@@ -148,10 +148,25 @@ linkedlist_get (linkedlist_t * l, int pos, void * e)
 void
 linkedlist_sort (linkedlist_t * l, int ( cmp_elements)(void * e1, void * e2)) 
 {
-	/* TODO */
+	node_t * i, * j, * m ;
+
+	int unit = *((int *)(l->element)) ;
+
+	for (i = l->right ; i != l ; i = i->right) {
+		m = i ;
+		for (j = i->right ; j != l ; j = j->right) {
+			if (cmp_elements(j->element, m->element) < 0)
+				m = j ;
+		}
+
+		void * t = i->element ;
+		i->element = m->element ;
+		m->element = t ;
+	}
 }
 
 void
 linkedlist_qsort (linkedlist_t * l, int ( cmp_elements)(void * e1, void * e2))
 {
+	/* TODO */
 }

@@ -65,7 +65,8 @@ main ()
 	}
 	fclose(fp) ;
 
-	linkedlist_sort(l, cmp_string) ;
+	linkedlist_qsort(l, cmp_string) ;
+	//linkedlist_sort(l, cmp_string) ;
 
 	int n ; 
 	char * s ;
