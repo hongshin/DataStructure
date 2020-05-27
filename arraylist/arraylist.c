@@ -155,9 +155,13 @@ _arraylist_qsort (arraylist_t * l, int (* cmp_elements)(void * e1, void * e2), v
 	memcpy(rbound, pivot, unit) ;
 	memcpy(pivot, t, unit) ;
 	free(t) ;
-
-	_arraylist_qsort(l, cmp_elements, begin, rbound + unit) ;
-	_arraylist_qsort(l, cmp_elements, rbound + unit, end) ;
+	if (rbound != end - unit) {
+		_arraylist_qsort(l, cmp_elements, begin, rbound + unit) ;
+		_arraylist_qsort(l, cmp_elements, rbound + unit, end) ;
+	}
+	else {
+		_arraylist_qsort(l, cmp_elements, begin, rbound) ;
+	}
 }
 
 void
