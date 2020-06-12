@@ -41,10 +41,17 @@ main ()
 
 	entry query ;
 	query.key = 9 ;
-	printf("%s\n", ((entry *)bst_search(t, &query))->data) ;
+
+	if (bst_search(t, &query) == 0) {
+		printf("%s\n", query.data) ;
+	}
+	else {
+		printf("no such element exists.\n") ;
+	}
 
 	for (i = 0 ; i < 10 ; i++) {
 		bst_remove(t, &i) ;
+		bst_print(t, _print) ;
 	}
 	bst_free(t) ;
 }
